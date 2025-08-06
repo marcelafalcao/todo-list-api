@@ -1,0 +1,30 @@
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> symfony/runtime ###
+/vendor/
+###< symfony/runtime ###
+
+###> symfony/webpack-encore-bundle ###
+/public/build/
+/node_modules/
+###< symfony/webpack-encore-bundle ###
+
+# Docker
+docker-compose.override.yml
+.env
+
+# IDE
+.idea/
+.vscode/
+
+# OS generated files
+.DS_Store
+Thumbs.db
