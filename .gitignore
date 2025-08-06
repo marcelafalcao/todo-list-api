@@ -24,6 +24,7 @@ docker-compose.override.yml
 # IDE
 .idea/
 .vscode/
+.Path.php/
 
 # OS generated files
 .DS_Store
