@@ -1,73 +1,47 @@
 services:
-  # Serviço da Aplicação PHP (Symfony ou PHP puro)
   app:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: php-app
     volumes:
-      - ./:/var/www/html # Monta a pasta src do seu projeto na pasta /var/www/html do container
+      - ./:/var/www/html
     ports:
-      - "9000:9000" # Porta para o PHP-FPM (usado pelo Nginx)
+      - "9000:9000"
     depends_on:
-      - db # Garante que o banco de dados seja iniciado antes da aplicação
+      - db
     networks:
       - app-network
 
-  # Serviço do Servidor Web (Nginx)
   nginx:
     image: nginx:latest
     container_name: nginx-server
     ports:
-      - "80:80" # Mapeia a porta 80 do host para a porta 80 do container
+      - "80:80"
     volumes:
-      - ./:/var/www/html # Acesso aos arquivos da aplicação
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf # Arquivo de configuração do Nginx
+      - ./:/var/www/html
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - app
     networks:
       - app-network
 
-  # Serviço do Banco de Dados (PostgreSQL)
   db:
-    image: postgres:16 # Usando a versão 16 do PostgreSQL
+    image: postgres:16
     container_name: postgres-db
     environment:
       POSTGRES_DB: todo_list_db
       POSTGRES_USER: mafal
       POSTGRES_PASSWORD: 12345
     ports:
-      - "5432:5432" # Mapeia a porta padrão do PostgreSQL
+      - "5432:5432"
     volumes:
-      - db_data:/var/lib/postgresql/data # Volume persistente para os dados do banco
+      - db_data:/var/lib/postgresql/data
     networks:
       - app-network
 
-###> doctrine/doctrine-bundle ###
-  database:
-    image: postgres:${POSTGRES_VERSION:-16}-alpine
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB:-app}
-      # You should definitely change the password in production
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
-      POSTGRES_USER: ${POSTGRES_USER:-app}
-    healthcheck:
-      test: ["CMD", "pg_isready", "-d", "${POSTGRES_DB:-app}", "-U", "${POSTGRES_USER:-app}"]
-      timeout: 5s
-      retries: 5
-      start_period: 60s
-    volumes:
-      - database_data:/var/lib/postgresql/data:rw
-      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-      # - ./docker/db/data:/var/lib/postgresql/data:rw
-###< doctrine/doctrine-bundle ###
-
 volumes:
-
-###> doctrine/doctrine-bundle ###
-  database_data:
-###< doctrine/doctrine-bundle ###
-  db_data: # Define o volume persistente para o banco de dados
+  db_data:
 
 networks:
   app-network:
